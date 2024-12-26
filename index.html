@@ -1644,6 +1644,11 @@
             </div>
             <p class="intro-subtext mt-4 text-xl tracking-widest opacity-0">DEVELOPER & DESIGNER</p>
             
+            <!-- Random Quote -->
+            <div class="quote-container mt-8 opacity-0" style="animation: introFadeIn 1.5s ease-out forwards; animation-delay: 2s;">
+                <p class="text-lg text-white/60 italic" id="random-quote"></p>
+            </div>
+            
             <!-- Decorative Lines -->
             <div class="intro-decorative-lines">
                 <div class="line-left"></div>
@@ -1830,5 +1835,95 @@
     </main>
 
     <script src="script.js"></script>
+
+    <!-- Add quotes array to script -->
+    <script>
+        const quotes = [
+            { text: "Controlling more, brings you to your goal", author: "Bubble" },
+            { text: "Every mistake is a step towards perfection", author: "Gemi" },
+            { text: "Guide with patience, achieve with persistence", author: "Echo" },
+            { text: "Learning together, growing stronger", author: "QR" },
+            { text: "The path to success is paved with corrections", author: "Bubble" },
+            { text: "Embrace the journey of refinement", author: "Gemi" },
+            { text: "Perfect results come from perfect guidance", author: "Echo" },
+            { text: "Together we learn, together we grow", author: "QR" },
+            { text: "In the dance of prompts and responses, harmony is found", author: "Echo" },
+            { text: "Small adjustments lead to great achievements", author: "Bubble" },
+            { text: "The best results come from clear direction", author: "Gemi" },
+            { text: "Understanding grows with each interaction", author: "QR" },
+            { text: "Precision in guidance yields precision in results", author: "Echo" },
+            { text: "Every prompt shapes the path forward", author: "Bubble" },
+            { text: "Clarity of thought leads to clarity of creation", author: "Gemi" },
+            { text: "In collaboration, we find innovation", author: "QR" },
+            { text: "The art of guidance is the key to success", author: "Echo" },
+            { text: "Better prompts, better outcomes", author: "Bubble" },
+            { text: "Each iteration brings us closer to perfection", author: "Gemi" },
+            { text: "Knowledge shared is knowledge multiplied", author: "QR" },
+            { text: "The journey of improvement never ends", author: "Echo" },
+            { text: "Guide with purpose, create with passion", author: "Bubble" },
+            { text: "Understanding grows in the space between questions", author: "Gemi" },
+            { text: "Together we bridge the gap of possibility", author: "QR" },
+            { text: "Refinement is the path to excellence", author: "Echo" },
+            { text: "Every prompt is a step toward mastery", author: "Bubble" },
+            { text: "In guidance lies the seed of greatness", author: "Gemi" },
+            { text: "Unity of purpose leads to unity of achievement", author: "QR" },
+            { text: "The clearer the direction, the clearer the path", author: "Echo" },
+            { text: "Success is built on iterative improvement", author: "Bubble" },
+            { text: "Through collaboration, we achieve the impossible", author: "Gemi" },
+            { text: "Each adjustment brings new possibilities", author: "QR" },
+            { text: "Patience in guidance yields precision in results", author: "Echo" },
+            { text: "The journey of creation is never alone", author: "Bubble" },
+            { text: "Understanding deepens with each interaction", author: "Gemi" },
+            { text: "Together we unlock new potentials", author: "QR" },
+            { text: "Guidance shapes the future of creation", author: "Echo" },
+            { text: "In refinement, we find excellence", author: "Bubble" },
+            { text: "Every prompt is a brush stroke on possibility", author: "Gemi" },
+            { text: "Collaboration amplifies creativity", author: "QR" },
+            { text: "The path to mastery is paved with patience", author: "Echo" },
+            { text: "Clear direction leads to clear results", author: "Bubble" },
+            { text: "Innovation thrives on iteration", author: "Gemi" },
+            { text: "United in purpose, unlimited in potential", author: "QR" },
+            { text: "Precision in thought yields precision in creation", author: "Echo" },
+            { text: "Each step forward is a lesson learned", author: "Bubble" },
+            { text: "The art of AI lies in human guidance", author: "Gemi" },
+            { text: "Together we shape tomorrow's possibilities", author: "QR" },
+            { text: "Growth comes from guided exploration", author: "Echo" },
+            { text: "In clarity we find creativity", author: "Bubble" },
+            { text: "Every interaction shapes understanding", author: "Gemi" },
+            { text: "Unity in vision leads to unity in creation", author: "QR" },
+            { text: "The journey of improvement is endless", author: "Echo" },
+            { text: "Guide with wisdom, create with purpose", author: "Bubble" },
+            { text: "Understanding flourishes in partnership", author: "Gemi" },
+            { text: "Together we reach new horizons", author: "QR" },
+            { text: "Mastery comes through mindful guidance", author: "Echo" },
+            { text: "Each prompt shapes tomorrow's success", author: "Bubble" },
+            { text: "In patience we find perfection", author: "Gemi" },
+            { text: "Collective wisdom leads to greater heights", author: "QR" },
+            { text: "The art of direction is the art of creation", author: "Echo" },
+            { text: "Better guidance leads to better results", author: "Bubble" },
+            { text: "Every step is a step toward excellence", author: "Gemi" },
+            { text: "Together we unlock infinite possibilities", author: "QR" },
+            { text: "Refinement is the essence of progress", author: "Echo" },
+            { text: "Guide with intention, create with precision", author: "Bubble" },
+            { text: "Understanding deepens through dialogue", author: "Gemi" },
+            { text: "Together we pioneer possibilities", author: "QR" },
+            { text: "Excellence emerges from exploration", author: "Echo" },
+            { text: "Each guidance shapes the future", author: "Bubble" },
+            { text: "In unity we find strength", author: "Gemi" },
+            { text: "Collective vision leads to collective victory", author: "QR" },
+            { text: "The art of progress is never-ending", author: "Echo" },
+            { text: "Better direction, better destination", author: "Bubble" },
+            { text: "Every moment is a chance to improve", author: "Gemi" },
+            { text: "Together we transcend limitations", author: "QR" },
+            { text: "Refinement is the key to excellence", author: "Echo" }
+        ];
+
+        // Display random quote
+        document.addEventListener('DOMContentLoaded', () => {
+            const quoteElement = document.getElementById('random-quote');
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            quoteElement.innerHTML = `"${randomQuote.text}" - ${randomQuote.author}`;
+        });
+    </script>
 </body>
 </html> 
