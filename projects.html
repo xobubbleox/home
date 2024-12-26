@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Bubble</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="responsive.css">
+    <style>
+        /* Import existing styles */
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --glow-color: rgba(255, 255, 255, 0.8);
+            --hover-transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        body {
+            background: #000000;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .glow-text {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .content-box {
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transition: var(--hover-transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-box:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 15px 40px -10px rgba(255, 255, 255, 0.15),
+                0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .button-glow {
+            position: relative;
+            overflow: hidden;
+            transition: var(--hover-transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .button-glow:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            letter-spacing: 6px;
+        }
+
+        /* Prevent text selection */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .project-card {
+            transition: var(--hover-transition);
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, 
+                rgba(255, 182, 255, 0.05), 
+                rgba(182, 255, 255, 0.02)
+            );
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-image: linear-gradient(135deg, 
+                rgba(255, 182, 255, 0.3), 
+                rgba(182, 255, 255, 0.3)
+            ) 1;
+            box-shadow: 
+                0 15px 40px -10px rgba(255, 182, 255, 0.2),
+                0 0 20px rgba(182, 255, 255, 0.1);
+        }
+
+        .project-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+
+        .project-image img {
+            transition: var(--hover-transition);
+        }
+
+        .project-card:hover .project-image img {
+            transform: scale(1.05);
+        }
+
+        .tech-tag {
+            background: linear-gradient(135deg,
+                rgba(255, 182, 255, 0.1),
+                rgba(182, 255, 255, 0.1)
+            );
+            transition: var(--hover-transition);
+        }
+
+        .tech-tag:hover {
+            background: linear-gradient(135deg,
+                rgba(255, 182, 255, 0.2),
+                rgba(182, 255, 255, 0.2)
+            );
+            transform: translateY(-2px);
+        }
+
+        .github-link {
+            transition: var(--hover-transition);
+        }
+
+        .github-link:hover {
+            transform: translateY(-2px);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Animated Background -->
+    <div class="background-animation" id="background"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full backdrop-blur-md z-50 border-b border-white/10">
+        <div class="container mx-auto px-8 py-6">
+            <div class="flex justify-between items-center">
+                <a href="index.html" class="nav-link text-lg">← BACK</a>
+                <h1 class="text-3xl font-bold tracking-wider glow-text">MY PROJECTS</h1>
+                <div class="w-20"></div> <!-- Spacer for centering -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 md:px-8 pt-32">
+        <section class="min-h-[calc(100vh-8rem)] py-20">
+            <!-- Current Project -->
+            <div class="project-card p-8 md:p-10 mb-12">
+                <div class="space-y-6">
+                    <h2 class="text-4xl font-bold mb-4">Gemi Intelligence</h2>
+                    <div class="space-y-4">
+                        <p class="text-lg text-white/80 leading-relaxed">
+                            A modern web-based chat interface built with HTML, CSS, and JavaScript. The current version features a clean, user-friendly design with image upload capabilities and a responsive layout that works across all devices.
+                        </p>
+                        <p class="text-lg text-white/80 leading-relaxed">
+                            The interface includes smooth animations, interactive elements, and a beautiful dark theme design. Users can upload images and interact with the chat system through an intuitive interface.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-3 my-6">
+                        <span class="tech-tag px-4 py-2 rounded-full text-sm">HTML</span>
+                        <span class="tech-tag px-4 py-2 rounded-full text-sm">CSS</span>
+                        <span class="tech-tag px-4 py-2 rounded-full text-sm">JavaScript</span>
+                        <span class="tech-tag px-4 py-2 rounded-full text-sm">Web Development</span>
+                    </div>
+                    <div class="flex gap-6">
+                        <a href="https://gemiintelligence.github.io/chat" target="_blank" 
+                           class="button-glow inline-block px-8 py-3 text-lg font-bold tracking-wider rounded-xl">
+                            <i class="fas fa-external-link-alt mr-2"></i>
+                            Live Demo
+                        </a>
+                        <a href="https://github.com/gemiintelligence" target="_blank" 
+                           class="github-link flex items-center text-lg">
+                            <i class="fab fa-github mr-2"></i>
+                            View Repository
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="project-card p-8">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 mb-6">
+                            <i class="fas fa-paint-brush text-3xl text-white/80"></i>
+                            <h3 class="text-2xl font-bold">Design Features</h3>
+                        </div>
+                        <ul class="space-y-3 text-white/80">
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-sm"></i>
+                                Modern dark theme interface
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-sm"></i>
+                                Smooth animations and transitions
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-sm"></i>
+                                Responsive layout for all devices
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-sm"></i>
+                                Interactive UI elements
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-card p-8">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 mb-6">
+                            <i class="fas fa-code text-3xl text-white/80"></i>
+                            <h3 class="text-2xl font-bold">Technical Features</h3>
+                        </div>
+                        <ul class="space-y-3 text-white/80">
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-sm"></i>
+                                Clean, modular code structure
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-sm"></i>
+                                Image upload functionality
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-sm"></i>
+                                Real-time chat interface
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-sm"></i>
+                                Cross-browser compatibility
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Future Development -->
+            <div class="project-card p-8 md:p-10 mb-12">
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4 mb-6">
+                        <i class="fas fa-rocket text-3xl text-white/80"></i>
+                        <h3 class="text-2xl font-bold">Future Development</h3>
+                    </div>
+                    <p class="text-lg text-white/80 leading-relaxed">
+                        The next phase of Gemi Intelligence will introduce several specialized features:
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <i class="fas fa-palette text-2xl text-white/80"></i>
+                                <h4 class="text-xl font-bold">GEMI ART</h4>
+                            </div>
+                            <p class="text-white/80">AI art and design creation system for generating unique visual content.</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <i class="fas fa-code text-2xl text-white/80"></i>
+                                <h4 class="text-xl font-bold">GEMI CODE</h4>
+                            </div>
+                            <p class="text-white/80">Code generation and development assistance tools.</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <i class="fas fa-music text-2xl text-white/80"></i>
+                                <h4 class="text-xl font-bold">GEMI MUSIC</h4>
+                            </div>
+                            <p class="text-white/80">Music composition and audio creation tools.</p>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <i class="fas fa-video text-2xl text-white/80"></i>
+                                <h4 class="text-xl font-bold">GEMI VIDEO</h4>
+                            </div>
+                            <p class="text-white/80">Video generation and editing capabilities.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Development Timeline -->
+            <div class="project-card p-8 md:p-10 mb-12">
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4 mb-6">
+                        <i class="fas fa-clock text-3xl text-white/80"></i>
+                        <h3 class="text-2xl font-bold">Development Timeline</h3>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="flex items-start gap-4">
+                            <div class="flex flex-col items-center">
+                                <div class="w-4 h-4 rounded-full bg-white/20"></div>
+                                <div class="w-0.5 h-full bg-white/20"></div>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold mb-2">Current Version</h4>
+                                <p class="text-white/80">Basic chat interface with image upload capabilities</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="flex flex-col items-center">
+                                <div class="w-4 h-4 rounded-full bg-white/20"></div>
+                                <div class="w-0.5 h-full bg-white/20"></div>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold mb-2">Version 2.0 (In Development)</h4>
+                                <p class="text-white/80">Enhanced features and specialized AI models</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="flex flex-col items-center">
+                                <div class="w-4 h-4 rounded-full bg-white/20"></div>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold mb-2">Future Updates</h4>
+                                <p class="text-white/80">Additional features and improvements based on user feedback</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Follow Section -->
+            <div class="text-center mt-20">
+                <h3 class="text-2xl font-bold mb-6">Stay Updated</h3>
+                <p class="text-lg text-white/80 max-w-2xl mx-auto">
+                    Currently focused on developing and enhancing Gemi Intelligence. Follow my journey on GitHub to stay updated on the project's progress!
+                </p>
+                <a href="https://github.com/xobubbleox" target="_blank" 
+                   class="button-glow inline-block px-8 py-3 text-lg font-bold tracking-wider rounded-xl mt-8">
+                    <i class="fab fa-github mr-2"></i>
+                    Follow Me on GitHub
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html> 
