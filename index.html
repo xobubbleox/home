@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble - Developer & Designer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="responsive.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --glow-color: rgba(255, 255, 255, 0.8);
+            --hover-transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+            50% { text-shadow: 0 0 30px var(--glow-color); }
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { border-color: rgba(255, 255, 255, 0.1); }
+            50% { border-color: rgba(255, 255, 255, 0.3); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: starTwinkle 3s ease-in-out infinite;
+        }
+
+        .bubble-bg {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent);
+            animation: bubble var(--duration, 6s) ease-in-out infinite;
+            opacity: 0.3;
+        }
+
+        body {
+            background: #000000;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .glow-text {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .nav-link {
+            position: relative;
+            font-weight: 600;
+            letter-spacing: 2px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link::before {
+            content: '✦';
+            position: absolute;
+            left: -20px;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '✦';
+            position: absolute;
+            right: -20px;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-link:hover::before,
+        .nav-link:hover::after {
+            opacity: 0.8;
+            transform: translateX(0);
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .section-title::before {
+            content: '❋';
+            position: absolute;
+            top: 50%;
+            left: -80px;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            opacity: 0.5;
+        }
+
+        .section-title::after {
+            content: '❋';
+            position: absolute;
+            top: 50%;
+            right: -80px;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            opacity: 0.5;
+        }
+
+        .content-box {
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transition: var(--hover-transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                                      rgba(255,255,255,0.1) 0%, 
+                                      transparent 70%);
+            opacity: 0;
+            transition: var(--hover-transition);
+        }
+
+        .content-box:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 15px 40px -10px rgba(255, 255, 255, 0.15),
+                0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .social-icon {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            transform: scale(0);
+            transition: var(--hover-transition);
+        }
+
+        .social-icon::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1), transparent);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+
+        .social-icon:hover::before {
+            transform: scale(1.5);
+        }
+
+        .social-icon:hover::after {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .profile-container {
+            position: relative;
+        }
+
+        .profile-image {
+            position: relative;
+            z-index: 2;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .profile-image img {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: borderGlow 2s ease-in-out infinite;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .profile-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .orbit {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+            transition: var(--hover-transition);
+        }
+
+        .orbit::before {
+            content: '✧';
+            position: absolute;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-text {
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            background: linear-gradient(180deg, #fff, rgba(255, 255, 255, 0.7));
+            -webkit-background-clip: text;
+            background-clip: text;
+            transition: var(--hover-transition);
+        }
+
+        .hero-text:hover {
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            letter-spacing: -1px;
+        }
+
+        .button-glow {
+            position: relative;
+            overflow: hidden;
+            transition: var(--hover-transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .button-glow::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--hover-transition);
+            opacity: 0;
+        }
+
+        .button-glow:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            letter-spacing: 6px;
+        }
+
+        .button-glow:hover::before {
+            opacity: 1;
+            animation: shine 1.5s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+        }
+
+        .content-grid {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            width: 100%;
+        }
+
+        .profile-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 2rem 0;
+        }
+
+        @media (min-width: 768px) {
+            .hero-section {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                align-items: center;
+                gap: 5rem;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+        }
+
+        /* Add smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Add background noise texture */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAAElBMVEUAAAD///////////////////8+Uq06AAAABnRSTlMABAgMEBQtgqFsAAAAQklEQVQ4y2NgQAX8DAwMakCEzQDkMBCUY8ACDDA5rHIMLHAOAwMjA4LDhqYSXQ7FPDQzsKcixPmBOT/gHAFGPOUBANGgD/YzwjcjAAAAAElFTkSuQmCC');
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        /* Enhance nav blur effect */
+        nav {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--hover-transition);
+        }
+
+        nav:hover {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Add smooth transitions to all interactive elements */
+        a, button, input {
+            transition: var(--hover-transition);
+        }
+
+        .copy-tooltip {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            backdrop-filter: blur(4px);
+            animation: fadeInOut 2s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, 10px); }
+            20% { opacity: 1; transform: translate(-50%, 0); }
+            80% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -10px); }
+        }
+
+        /* Add scroll animations */
+        .scroll-fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .scroll-fade-up.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-fade-in {
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .scroll-fade-in.active {
+            opacity: 1;
+        }
+
+        .scroll-scale {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .scroll-scale.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .delay-200 { transition-delay: 200ms; }
+        .delay-400 { transition-delay: 400ms; }
+        .delay-600 { transition-delay: 600ms; }
+        .delay-800 { transition-delay: 800ms; }
+
+        /* Add cute decorative elements */
+        .cute-dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        .cute-heart {
+            position: absolute;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.2);
+            animation: float-heart 3s ease-in-out infinite;
+        }
+
+        @keyframes float-heart {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.5); opacity: 0.6; }
+        }
+
+        /* Cuter coming soon badge */
+        .coming-soon-badge {
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            backdrop-filter: blur(4px);
+            letter-spacing: 1px;
+        }
+
+        .coming-soon-badge::before {
+            content: '✧';
+            margin-right: 4px;
+            display: inline-block;
+            animation: spin 3s linear infinite;
+        }
+
+        /* Cuter section titles */
+        .section-title::before,
+        .section-title::after {
+            content: '';
+        }
+
+        /* Add sparkles to profile image */
+        .profile-image::after {
+            content: '';
+            position: absolute;
+            inset: -20px;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                                    rgba(255,255,255,0.2) 0%, 
+                                    transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .profile-image:hover::after {
+            opacity: 1;
+        }
+
+        /* Softer social icons */
+        .social-icon {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1), transparent);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .social-icon:hover::after {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        /* More cute decorative elements */
+        .kawaii-bubble {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+            border-radius: 50%;
+            backdrop-filter: blur(2px);
+            animation: float-bubble 6s ease-in-out infinite;
+            opacity: 0.3;
+        }
+
+        .kawaii-bubble::after {
+            content: '✧';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255,255,255,0.8);
+            font-size: 0.8rem;
+        }
+
+        @keyframes float-bubble {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(10px, -15px) rotate(5deg); }
+            66% { transform: translate(-10px, -25px) rotate(-5deg); }
+        }
+
+        /* Enhanced profile image */
+        .profile-image {
+            position: relative;
+            z-index: 2;
+            animation: float 8s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        .profile-image::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            background: linear-gradient(45deg, 
+                rgba(255, 182, 255, 0.7),
+                rgba(182, 255, 255, 0.7),
+                rgba(255, 182, 255, 0.7)
+            );
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.5;
+            animation: borderRotate 3s linear infinite;
+            filter: blur(8px);
+        }
+
+        @keyframes borderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Cute hover effects for content boxes */
+        .content-box:hover .cute-corner {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .cute-corner {
+            display: none;
+        }
+
+        /* Enhance coming soon badge */
+        .coming-soon-badge {
+            background: linear-gradient(135deg, 
+                rgba(255, 182, 255, 0.15), 
+                rgba(182, 255, 255, 0.05)
+            );
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            backdrop-filter: blur(4px);
+            letter-spacing: 2px;
+            transform-origin: center;
+            animation: pulse-badge 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-badge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .coming-soon-badge::before {
+            content: '';
+        }
+
+        /* Enhance social icons */
+        .social-icon {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg,
+                rgba(255, 182, 255, 0.1),
+                rgba(182, 255, 255, 0.1)
+            );
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.1);
+            background: linear-gradient(135deg,
+                rgba(255, 182, 255, 0.2),
+                rgba(182, 255, 255, 0.2)
+            );
+            box-shadow: 
+                0 10px 20px -5px rgba(255, 182, 255, 0.2),
+                0 0 30px rgba(182, 255, 255, 0.1);
+        }
+
+        /* Add cute section dividers */
+        .section-divider {
+            position: relative;
+            height: 40px;
+            margin: 2rem 0;
+            opacity: 0.3;
+        }
+
+        .section-divider::before {
+            content: '•••';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 8px;
+        }
+
+        /* Cursor sparkle effect */
+        .cursor-sparkle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            animation: sparkle-out 1s ease-out forwards;
+        }
+
+        .cursor-sparkle::before,
+        .cursor-sparkle::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: sparkle-pulse 1s ease-out forwards;
+        }
+
+        .cursor-sparkle::after {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes sparkle-out {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        @keyframes sparkle-pulse {
+            0% { transform: scale(0.2); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        /* Enhanced profile image effects */
+        .profile-image::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            background: linear-gradient(45deg, 
+                rgba(255,156,246,0.5), 
+                rgba(137,207,240,0.5), 
+                rgba(255,156,246,0.5)
+            );
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            filter: blur(10px);
+        }
+
+        .profile-image:hover::after {
+            opacity: 0.5;
+        }
+
+        /* Enhanced button glow */
+        .button-glow {
+            background: linear-gradient(135deg, 
+                rgba(255,156,246,0.1), 
+                rgba(137,207,240,0.1)
+            );
+        }
+
+        .button-glow:hover {
+            background: linear-gradient(135deg, 
+                rgba(255,156,246,0.2), 
+                rgba(137,207,240,0.2)
+            );
+            transform: translateY(-4px);
+            box-shadow: 
+                0 10px 20px -5px rgba(255,156,246,0.3),
+                0 0 30px rgba(137,207,240,0.2);
+        }
+
+        /* Enhanced content box effects */
+        .content-box {
+            border: 1px solid rgba(255,156,246,0.1);
+            background: linear-gradient(135deg, 
+                rgba(255,156,246,0.05), 
+                rgba(137,207,240,0.02)
+            );
+        }
+
+        .content-box:hover {
+            border-color: rgba(255,156,246,0.2);
+            box-shadow: 
+                0 15px 40px -10px rgba(255,156,246,0.15),
+                0 0 20px rgba(137,207,240,0.1);
+        }
+
+        /* Add cute icons to section titles */
+        .section-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            font-size: 1.2em;
+            opacity: 0.6;
+            animation: title-icon-bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes title-icon-bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(5deg); }
+        }
+
+        /* Enhanced profile image effects */
+        .profile-image {
+            position: relative;
+            z-index: 2;
+            animation: float 8s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        .profile-image::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            background: linear-gradient(45deg, 
+                rgba(255, 182, 255, 0.7),
+                rgba(182, 255, 255, 0.7),
+                rgba(255, 182, 255, 0.7)
+            );
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.5;
+            animation: borderRotate 3s linear infinite;
+            filter: blur(8px);
+        }
+
+        /* Cute button styles */
+        .button-glow {
+            background: linear-gradient(135deg, 
+                rgba(255, 182, 255, 0.1), 
+                rgba(182, 255, 255, 0.1)
+            );
+            border-radius: 30px;
+            padding: 1rem 2rem;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .button-glow:hover {
+            background: linear-gradient(135deg, 
+                rgba(255, 182, 255, 0.2), 
+                rgba(182, 255, 255, 0.2)
+            );
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 
+                0 10px 20px -5px rgba(255, 182, 255, 0.3),
+                0 0 30px rgba(182, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.1);
+            letter-spacing: 3px;
+        }
+
+        /* Enhanced content boxes */
+        .content-box {
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, 
+                rgba(255, 182, 255, 0.05), 
+                rgba(182, 255, 255, 0.02)
+            );
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .content-box:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-image: linear-gradient(135deg, 
+                rgba(255, 182, 255, 0.3), 
+                rgba(182, 255, 255, 0.3)
+            ) 1;
+            box-shadow: 
+                0 15px 40px -10px rgba(255, 182, 255, 0.2),
+                0 0 20px rgba(182, 255, 255, 0.1);
+        }
+
+        /* Enhanced coming soon badge */
+        .coming-soon-badge {
+            background: linear-gradient(135deg, 
+                rgba(255, 182, 255, 0.15), 
+                rgba(182, 255, 255, 0.05)
+            );
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            backdrop-filter: blur(4px);
+            letter-spacing: 2px;
+            transform-origin: center;
+            animation: pulse-badge 2s ease-in-out infinite;
+        }
+
+        /* Center all sections better */
+        section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Enhanced section titles */
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg,
+                rgba(255, 182, 255, 1),
+                rgba(182, 255, 255, 1)
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Make social icons cuter */
+        .social-icon {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg,
+                rgba(255, 182, 255, 0.1),
+                rgba(182, 255, 255, 0.1)
+            );
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.1);
+            background: linear-gradient(135deg,
+                rgba(255, 182, 255, 0.2),
+                rgba(182, 255, 255, 0.2)
+            );
+            box-shadow: 
+                0 10px 20px -5px rgba(255, 182, 255, 0.2),
+                0 0 30px rgba(182, 255, 255, 0.1);
+        }
+
+        /* Make navigation cuter */
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg,
+                rgba(255, 182, 255, 0.1),
+                rgba(182, 255, 255, 0.1)
+            );
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(135deg,
+                rgba(255, 182, 255, 0.2),
+                rgba(182, 255, 255, 0.2)
+            );
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        /* Click effects */
+        .click-bubble {
+            position: absolute;
+            pointer-events: none;
+            animation: click-expand 0.6s ease-out forwards;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                rgba(255, 182, 255, 0.3),
+                rgba(182, 255, 255, 0.1) 70%
+            );
+            z-index: 100;
+        }
+
+        @keyframes click-expand {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(4); opacity: 0; }
+        }
+
+        /* Click heart effect */
+        .click-heart {
+            position: absolute;
+            pointer-events: none;
+            font-size: 1.2rem;
+            color: rgba(255, 182, 255, 0.8);
+            animation: float-up 1s ease-out forwards;
+            z-index: 100;
+        }
+
+        @keyframes float-up {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: translate(-50%, -150%) scale(1.5) rotate(20deg); opacity: 0; }
+        }
+
+        /* Enhanced button click effect */
+        .button-glow:active {
+            transform: scale(0.95);
+            transition: transform 0.1s;
+        }
+
+        /* Enhanced content box click */
+        .content-box:active {
+            transform: scale(0.98);
+            transition: transform 0.1s;
+        }
+
+        /* Social icon click effect */
+        .social-icon:active {
+            transform: scale(0.9);
+            transition: transform 0.1s;
+        }
+
+        /* Nav link click effect */
+        .nav-link:active {
+            transform: scale(0.95);
+            transition: transform 0.1s;
+        }
+
+        /* Sparkle click effect */
+        .click-sparkle {
+            position: absolute;
+            pointer-events: none;
+            width: 20px;
+            height: 20px;
+            z-index: 100;
+        }
+
+        .click-sparkle::before,
+        .click-sparkle::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                rgba(255, 182, 255, 0.8),
+                rgba(182, 255, 255, 0.2) 70%
+            );
+            animation: sparkle-explode 0.8s ease-out forwards;
+        }
+
+        .click-sparkle::after {
+            animation-delay: 0.1s;
+        }
+
+        @keyframes sparkle-explode {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: scale(2) rotate(180deg); opacity: 0; }
+        }
+
+        /* Enhanced interactive effects */
+        .interactive {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+
+        .interactive:hover {
+            transform: scale(1.02);
+        }
+
+        .interactive:active {
+            transform: scale(0.97);
+        }
+
+        /* Make titles interactive */
+        .hero-text {
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .hero-text:hover {
+            text-shadow: 0 0 30px rgba(255, 182, 255, 0.5);
+            letter-spacing: -1px;
+            transform: scale(1.02);
+        }
+
+        .hero-text:active {
+            transform: scale(0.98);
+        }
+
+        /* Make section titles interactive */
+        .section-title {
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .section-title:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 30px rgba(255, 182, 255, 0.5);
+        }
+
+        .section-title:active {
+            transform: scale(0.97);
+        }
+
+        /* Enhanced profile image interaction */
+        .profile-image {
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+        .profile-image:active {
+            transform: scale(0.95) rotate(-2deg);
+        }
+
+        /* Make paragraphs interactive */
+        p {
+            transition: all 0.3s ease;
+        }
+
+        p:hover {
+            color: rgba(255, 255, 255, 1);
+            text-shadow: 0 0 10px rgba(255, 182, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Enhanced content box interaction */
+        .content-box {
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .content-box:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+
+        .content-box:active {
+            transform: translateY(-4px) scale(0.98);
+        }
+
+        /* Make icons more interactive */
+        i {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        i:hover {
+            transform: scale(1.2) rotate(5deg);
+            text-shadow: 0 0 15px rgba(255, 182, 255, 0.5);
+        }
+
+        i:active {
+            transform: scale(0.9) rotate(-5deg);
+        }
+
+        /* Enhanced social icon interaction */
+        .social-icon {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.1) rotate(5deg);
+        }
+
+        .social-icon:active {
+            transform: translateY(-2px) scale(0.9) rotate(-5deg);
+        }
+
+        /* Make tags interactive */
+        .content-box .rounded-lg {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+
+        .content-box .rounded-lg:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(255, 182, 255, 0.3);
+        }
+
+        .content-box .rounded-lg:active {
+            transform: scale(0.95);
+        }
+
+        /* Enhanced coming soon badge */
+        .coming-soon-badge {
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .coming-soon-badge:hover {
+            transform: scale(1.1) rotate(2deg);
+            box-shadow: 0 0 15px rgba(255, 182, 255, 0.3);
+        }
+
+        .coming-soon-badge:active {
+            transform: scale(0.95) rotate(-2deg);
+        }
+
+        /* Prevent text selection */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Allow text selection only for specific elements if needed */
+        .selectable {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Animated Background -->
+    <div class="background-animation" id="background"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full backdrop-blur-md z-50 border-b border-white/10">
+        <div class="container mx-auto px-8 py-6">
+            <div class="flex justify-center items-center">
+                <div class="flex gap-16 items-center">
+                    <a href="#projects" class="nav-link text-lg">PROJECTS</a>
+                    <h1 class="text-3xl font-bold tracking-wider glow-text mx-8">BUBBLE</h1>
+                    <a href="#about" class="nav-link text-lg">ABOUT</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 md:px-8">
+        <!-- Hero Section -->
+        <section class="min-h-screen flex flex-col items-center justify-center py-20">
+            <div class="w-full max-w-4xl mx-auto flex flex-col items-center">
+                <!-- Profile Image -->
+                <div class="profile-container relative w-64 h-64 md:w-80 md:h-80 mb-12 scroll-scale">
+                    <div class="profile-image w-full h-full">
+                        <img src="pfp.jpg" alt="Bubble" class="w-full h-full object-cover rounded-full shadow-2xl">
+                    </div>
+                    <div class="orbit absolute top-1/2 left-1/2 w-[120%] h-[120%] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+                    <div class="orbit absolute top-1/2 left-1/2 w-[140%] h-[140%] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+                    <div class="orbit absolute top-1/2 left-1/2 w-[160%] h-[160%] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+                </div>
+
+                <!-- Hero Content -->
+                <div class="hero-content text-center">
+                    <h1 class="hero-text text-6xl md:text-8xl mb-6 font-black scroll-fade-up interactive">
+                        DEVELOPER<br>& DESIGNER
+                    </h1>
+                    <p class="text-xl md:text-2xl text-white/80 leading-relaxed mb-12 max-w-2xl scroll-fade-up delay-200">
+                        17-year-old developer passionate about AI and its creative applications in art and design.
+                    </p>
+                    <div class="social-links flex justify-center gap-8 md:gap-12 scroll-fade-up delay-400">
+                        <a href="https://tiktok.com/@x0_bubble_0x" class="social-icon hover:text-white" target="_blank">
+                            <i class="fab fa-tiktok text-2xl"></i>
+                        </a>
+                        <a href="https://twitter.com/xo_bubble_ox" class="social-icon hover:text-white" target="_blank">
+                            <i class="fab fa-twitter text-2xl"></i>
+                        </a>
+                        <a href="#" class="social-icon hover:text-white discord-copy" style="position: relative;">
+                            <i class="fab fa-discord text-2xl"></i>
+                        </a>
+                        <a href="https://github.com/gemiintelligence" class="social-icon hover:text-white" target="_blank">
+                            <i class="fab fa-github text-2xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-32 md:py-40">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-20">
+                    <h2 class="section-title text-4xl md:text-5xl font-black mb-8 glow-text scroll-fade-up">GEMI INTELLIGENCE</h2>
+                    <p class="text-lg md:text-xl text-white/80 max-w-3xl mx-auto scroll-fade-up delay-200">
+                        The Next Generation of AI-Powered Creation
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                    <div class="content-box p-8 md:p-10 rounded-2xl group hover:bg-white/5 scroll-fade-up delay-400">
+                        <div class="relative z-10 flex flex-col h-full">
+                            <div class="absolute top-4 right-4 coming-soon-badge">Coming Soon</div>
+                            <i class="fas fa-palette text-3xl md:text-4xl mb-6 opacity-80 group-hover:opacity-100"></i>
+                            <h3 class="text-2xl md:text-3xl font-bold mb-4">GEMI ART</h3>
+                            <p class="text-lg md:text-xl text-white/80 mb-6">Advanced AI art and design creation system</p>
+                            <div class="flex flex-wrap gap-3 mt-auto opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                <span class="px-4 py-2 rounded-lg bg-white/10 text-sm">AI Art Generation</span>
+                                <span class="px-4 py-2 rounded-lg bg-white/10 text-sm">Design Tools</span>
+                                <span class="px-4 py-2 rounded-lg bg-white/10 text-sm">Creative Suite</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-box p-8 md:p-10 rounded-2xl group hover:bg-white/5 scroll-fade-up delay-400">
+                        <div class="relative z-10 flex flex-col h-full">
+                            <div class="absolute top-4 right-4 coming-soon-badge">Coming Soon</div>
+                            <i class="fas fa-code text-3xl md:text-4xl mb-6 opacity-80 group-hover:opacity-100"></i>
+                            <h3 class="text-2xl md:text-3xl font-bold mb-4">GEMI CODE</h3>
+                            <p class="text-lg md:text-xl text-white/80 mb-6">Advanced complex code generation system</p>
+                            <div class="flex flex-wrap gap-3 mt-auto opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                <span class="px-4 py-2 rounded-lg bg-white/10 text-sm">Code Generation</span>
+                                <span class="px-4 py-2 rounded-lg bg-white/10 text-sm">AI Development</span>
+                                <span class="px-4 py-2 rounded-lg bg-white/10 text-sm">Smart Tools</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                <p class="text-white/60 mb-8">Currently in development - More features coming soon</p>
+                <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                    <a href="https://gemiintelligence.github.io/chat" target="_blank" 
+                           class="button-glow inline-block px-12 py-4 text-xl font-bold tracking-wider rounded-xl">
+                        TRY GEMI INTELLIGENCE
+                    </a>
+                    <a href="about-gemi.html" 
+                           class="button-glow inline-block px-12 py-4 text-xl font-bold tracking-wider rounded-xl">
+                        LEARN MORE
+                    </a>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-32 md:py-40">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-20">
+                    <h2 class="section-title text-4xl md:text-5xl font-black mb-8 glow-text scroll-fade-up">ABOUT ME</h2>
+                </div>
+                <div class="content-box p-8 md:p-10 rounded-2xl group hover:bg-white/5 scroll-fade-up delay-200">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <div class="space-y-12">
+                            <div class="text-center">
+                                <div class="flex items-center justify-center gap-4 mb-4">
+                                    <span class="h-[1px] w-12 bg-white/20"></span>
+                                    <h3 class="text-2xl md:text-3xl font-bold">WHO AM I</h3>
+                                    <span class="h-[1px] w-12 bg-white/20"></span>
+                                </div>
+                                <p class="text-lg text-white/80 leading-relaxed">
+                                    I'm Bubble, a 17-year-old developer and designer with a passion for creating innovative AI solutions. Currently focused on learning Python and JavaScript, I combine my technical skills with creative design to build unique experiences.
+                                </p>
+                            </div>
+                            <div class="text-center">
+                                <div class="flex items-center justify-center gap-4 mb-4">
+                                    <span class="h-[1px] w-12 bg-white/20"></span>
+                                    <h3 class="text-2xl md:text-3xl font-bold">WHAT I DO</h3>
+                                    <span class="h-[1px] w-12 bg-white/20"></span>
+                                </div>
+                                <p class="text-lg text-white/80 leading-relaxed">
+                                    I specialize in AI development and creative design, working on projects that push the boundaries of what's possible with artificial intelligence. My current focus is on Gemi Intelligence, an advanced AI system capable of creating various forms of content.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="space-y-12">
+                            <div class="text-center">
+                                <div class="flex items-center justify-center gap-4 mb-4">
+                                    <span class="h-[1px] w-12 bg-white/20"></span>
+                                    <h3 class="text-2xl md:text-3xl font-bold">MY JOURNEY</h3>
+                                    <span class="h-[1px] w-12 bg-white/20"></span>
+                                </div>
+                                <p class="text-lg text-white/80 leading-relaxed">
+                                    With a strong foundation in both development and design, I'm constantly exploring new technologies and creative possibilities. My work spans from AI art generation to complex code development, always pushing for innovation.
+                                </p>
+                            </div>
+                            <div class="text-center">
+                                <div class="flex items-center justify-center gap-4 mb-4">
+                                    <span class="h-[1px] w-12 bg-white/20"></span>
+                                    <h3 class="text-2xl md:text-3xl font-bold">MY VISION</h3>
+                                    <span class="h-[1px] w-12 bg-white/20"></span>
+                                </div>
+                                <p class="text-lg text-white/80 leading-relaxed">
+                                    I aim to revolutionize content creation through AI, making powerful tools accessible to everyone. Through projects like Gemi Intelligence, I'm working to bridge the gap between human creativity and artificial intelligence.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html> 

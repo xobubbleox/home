@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Gemi Intelligence - Bubble</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="responsive.css">
+    <style>
+        /* Import existing styles */
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --glow-color: rgba(255, 255, 255, 0.8);
+            --hover-transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        body {
+            background: #000000;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .glow-text {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .content-box {
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transition: var(--hover-transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-box:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 15px 40px -10px rgba(255, 255, 255, 0.15),
+                0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .button-glow {
+            position: relative;
+            overflow: hidden;
+            transition: var(--hover-transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .button-glow:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            letter-spacing: 6px;
+        }
+
+        /* Prevent text selection */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { border-color: rgba(255, 255, 255, 0.1); }
+            50% { border-color: rgba(255, 255, 255, 0.3); }
+        }
+
+        .profile-container {
+            position: relative;
+        }
+
+        .profile-image {
+            position: relative;
+            z-index: 2;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .profile-image img {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: borderGlow 2s ease-in-out infinite;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .profile-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .orbit {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+            transition: var(--hover-transition);
+        }
+
+        .orbit::before {
+            content: '✧';
+            position: absolute;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Enhanced profile image effects */
+        .profile-image::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            background: linear-gradient(45deg, 
+                rgba(255,156,246,0.5), 
+                rgba(137,207,240,0.5), 
+                rgba(255,156,246,0.5)
+            );
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            filter: blur(10px);
+        }
+
+        .profile-image:hover::after {
+            opacity: 0.5;
+        }
+
+        /* Add sparkles to profile image */
+        .profile-image::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            background: linear-gradient(45deg, 
+                rgba(255, 182, 255, 0.7),
+                rgba(182, 255, 255, 0.7),
+                rgba(255, 182, 255, 0.7)
+            );
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.5;
+            animation: borderRotate 3s linear infinite;
+            filter: blur(8px);
+        }
+
+        @keyframes borderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Background animations */
+        @keyframes bubble {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(30px, -50px); }
+            66% { transform: translate(-20px, -70px); }
+        }
+
+        .bubble-bg {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent);
+            animation: bubble var(--duration, 6s) ease-in-out infinite;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        @keyframes float-bubble {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(10px, -15px) rotate(5deg); }
+            66% { transform: translate(-10px, -25px) rotate(-5deg); }
+        }
+
+        .kawaii-bubble {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+            border-radius: 50%;
+            backdrop-filter: blur(2px);
+            animation: float-bubble 6s ease-in-out infinite;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .kawaii-bubble::after {
+            content: '✧';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255,255,255,0.8);
+            font-size: 0.8rem;
+        }
+
+        /* Smooth nav transition */
+        nav {
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Interactive background */
+        .background-animation {
+            background: #000000;
+            transition: background 0.3s ease-out;
+        }
+
+        .interactive-bubble {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle at center,
+                rgba(255, 182, 255, 0.1),
+                rgba(182, 255, 255, 0.05),
+                transparent 70%
+            );
+            pointer-events: none;
+            transition: transform 0.3s ease-out;
+            backdrop-filter: blur(1px);
+            mix-blend-mode: screen;
+        }
+
+        .interactive-bubble::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%,
+                rgba(255, 255, 255, 0.2),
+                transparent 50%
+            );
+            opacity: 0.5;
+        }
+
+        /* Remove old bubble and heart styles */
+        .bubble-bg, .kawaii-bubble, .click-heart, .cute-heart {
+            display: none !important;
+        }
+
+        /* Update orbit symbol */
+        .orbit::before {
+            content: '✦';
+            position: absolute;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Update kawaii bubble symbol */
+        .kawaii-bubble::after {
+            content: '✦';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255,255,255,0.8);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Animated Background -->
+    <div class="background-animation" id="background"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full backdrop-blur-md z-50 border-b border-white/10">
+        <div class="container mx-auto px-8 py-6">
+            <div class="flex justify-between items-center">
+                <a href="index.html" class="nav-link text-lg">← BACK</a>
+                <h1 class="text-3xl font-bold tracking-wider glow-text">GEMI INTELLIGENCE</h1>
+                <div class="w-20"></div> <!-- Spacer for centering -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 md:px-8 pt-32">
+        <section class="min-h-[calc(100vh-8rem)] flex flex-col items-center justify-center py-20">
+            <div class="w-full max-w-4xl mx-auto">
+                <div class="text-center mb-20">
+                    <div class="profile-container relative w-48 h-48 mx-auto mb-8 scroll-scale">
+                        <div class="profile-image w-full h-full">
+                            <img src="pfp.jpg" alt="Bubble" class="w-full h-full object-cover rounded-full shadow-2xl">
+                        </div>
+                        <div class="orbit absolute top-1/2 left-1/2 w-[120%] h-[120%] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+                        <div class="orbit absolute top-1/2 left-1/2 w-[140%] h-[140%] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-black mb-8 glow-text scroll-fade-up">ABOUT GEMI INTELLIGENCE</h2>
+                    <p class="text-xl md:text-2xl text-white/80 leading-relaxed mb-12 scroll-fade-up">
+                        The Next Generation of AI-Powered Creation
+                    </p>
+                </div>
+
+                <div class="space-y-8">
+                    <div class="content-box p-8 md:p-10 scroll-fade-up">
+                        <div class="flex items-center gap-6 mb-6">
+                            <i class="fas fa-robot text-4xl text-white/80"></i>
+                            <h3 class="text-2xl md:text-3xl font-bold">Overview</h3>
+                        </div>
+                        <p class="text-lg text-white/80 leading-relaxed mb-6">
+                            Gemi Intelligence is an advanced AI system that can create almost anything you can imagine. Currently available as a text generation and image upload system, with more advanced features in development for version 2.0.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            <div class="bg-white/5 rounded-xl p-4 text-center">
+                                <i class="fas fa-brain text-2xl mb-2"></i>
+                                <p class="text-sm">Advanced AI</p>
+                            </div>
+                            <div class="bg-white/5 rounded-xl p-4 text-center">
+                                <i class="fas fa-bolt text-2xl mb-2"></i>
+                                <p class="text-sm">Fast Processing</p>
+                            </div>
+                            <div class="bg-white/5 rounded-xl p-4 text-center">
+                                <i class="fas fa-magic text-2xl mb-2"></i>
+                                <p class="text-sm">Creative Output</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-box p-8 md:p-10 scroll-fade-up">
+                        <div class="flex items-center gap-6 mb-6">
+                            <i class="fas fa-code-branch text-4xl text-white/80"></i>
+                            <h3 class="text-2xl md:text-3xl font-bold">Current Features</h3>
+                        </div>
+                        <div class="space-y-8">
+                            <div class="bg-white/5 rounded-xl p-6">
+                                <div class="flex items-start gap-4">
+                                    <i class="fas fa-comment-dots text-2xl mt-1"></i>
+                                    <div>
+                                        <h4 class="text-xl font-bold mb-4">Text Generation</h4>
+                                        <p class="text-lg text-white/80 leading-relaxed">
+                                            The current version of Gemi Intelligence offers powerful text generation capabilities and image upload functionality. Experience natural language processing that understands context and generates human-like responses.
+                                        </p>
+                                        <ul class="mt-4 space-y-2 text-white/80">
+                                            <li class="flex items-center gap-2">
+                                                <i class="fas fa-check text-sm"></i>
+                                                Natural language understanding
+                                            </li>
+                                            <li class="flex items-center gap-2">
+                                                <i class="fas fa-check text-sm"></i>
+                                                Context-aware responses
+                                            </li>
+                                            <li class="flex items-center gap-2">
+                                                <i class="fas fa-check text-sm"></i>
+                                                Image upload support
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white/5 rounded-xl p-6">
+                                <div class="flex items-start gap-4">
+                                    <i class="fas fa-rocket text-2xl mt-1"></i>
+                                    <div>
+                                        <h4 class="text-xl font-bold mb-4">Version 2.0 Development</h4>
+                                        <p class="text-lg text-white/80 leading-relaxed">
+                                            A new, more advanced version (Gemi Intelligence 2.0) is currently in development, featuring enhanced capabilities and improved features.
+                                        </p>
+                                        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div class="border border-white/10 rounded-lg p-4">
+                                                <h5 class="font-bold mb-2">Enhanced Processing</h5>
+                                                <p class="text-sm text-white/70">Faster and more efficient AI processing capabilities</p>
+                                            </div>
+                                            <div class="border border-white/10 rounded-lg p-4">
+                                                <h5 class="font-bold mb-2">Advanced Features</h5>
+                                                <p class="text-sm text-white/70">New tools and capabilities for better results</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-box p-8 md:p-10 scroll-fade-up">
+                        <div class="flex items-center gap-6 mb-6">
+                            <i class="fas fa-layer-group text-4xl text-white/80"></i>
+                            <h3 class="text-2xl md:text-3xl font-bold">Future Versions</h3>
+                        </div>
+                        <p class="text-lg text-white/80 leading-relaxed mb-8">
+                            Multiple specialized versions of Gemi Intelligence are planned for future release, each focusing on specific creative domains:
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="space-y-6">
+                                <div class="bg-white/5 rounded-xl p-6 transform hover:scale-105 transition-transform">
+                                    <div class="flex items-start gap-4">
+                                        <i class="fas fa-palette text-3xl mt-1"></i>
+                                        <div>
+                                            <h4 class="text-xl font-bold mb-2">GEMI ART</h4>
+                                            <p class="text-white/80">AI system for creating art and design</p>
+                                            <ul class="mt-4 space-y-2 text-sm text-white/70">
+                                                <li>• Digital Art Creation</li>
+                                                <li>• Style Transfer</li>
+                                                <li>• Design Automation</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-white/5 rounded-xl p-6 transform hover:scale-105 transition-transform">
+                                    <div class="flex items-start gap-4">
+                                        <i class="fas fa-code text-3xl mt-1"></i>
+                                        <div>
+                                            <h4 class="text-xl font-bold mb-2">GEMI CODE</h4>
+                                            <p class="text-white/80">AI system for creating complex code</p>
+                                            <ul class="mt-4 space-y-2 text-sm text-white/70">
+                                                <li>• Intelligent Code Generation</li>
+                                                <li>• Code Optimization</li>
+                                                <li>• Development Assistance</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-6">
+                                <div class="bg-white/5 rounded-xl p-6 transform hover:scale-105 transition-transform">
+                                    <div class="flex items-start gap-4">
+                                        <i class="fas fa-music text-3xl mt-1"></i>
+                                        <div>
+                                            <h4 class="text-xl font-bold mb-2">GEMI MUSIC</h4>
+                                            <p class="text-white/80">AI system for creating music</p>
+                                            <ul class="mt-4 space-y-2 text-sm text-white/70">
+                                                <li>• Music Composition</li>
+                                                <li>• Sound Design</li>
+                                                <li>• Audio Processing</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-white/5 rounded-xl p-6 transform hover:scale-105 transition-transform">
+                                    <div class="flex items-start gap-4">
+                                        <i class="fas fa-video text-3xl mt-1"></i>
+                                        <div>
+                                            <h4 class="text-xl font-bold mb-2">GEMI VIDEO</h4>
+                                            <p class="text-white/80">AI system for creating videos</p>
+                                            <ul class="mt-4 space-y-2 text-sm text-white/70">
+                                                <li>• Video Generation</li>
+                                                <li>• Visual Effects</li>
+                                                <li>• Animation Creation</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-box p-8 md:p-10 scroll-fade-up">
+                        <div class="flex items-center gap-6 mb-6">
+                            <i class="fas fa-code-commit text-4xl text-white/80"></i>
+                            <h3 class="text-2xl md:text-3xl font-bold">Development & Release</h3>
+                        </div>
+                        <div class="space-y-6">
+                            <p class="text-lg text-white/80 leading-relaxed">
+                                All versions of Gemi Intelligence will be released on GitHub, with a dedicated website to showcase their capabilities. While the exact release date for upcoming versions is currently unknown, development is actively ongoing.
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="bg-white/5 rounded-xl p-6">
+                                    <h4 class="text-xl font-bold mb-4">Current Status</h4>
+                                    <ul class="space-y-3 text-white/80">
+                                        <li class="flex items-center gap-2">
+                                            <i class="fas fa-check-circle text-green-400"></i>
+                                            Base version available
+                                        </li>
+                                        <li class="flex items-center gap-2">
+                                            <i class="fas fa-spinner fa-spin text-blue-400"></i>
+                                            Version 2.0 in development
+                                        </li>
+                                        <li class="flex items-center gap-2">
+                                            <i class="fas fa-clock text-yellow-400"></i>
+                                            Specialized versions planned
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="bg-white/5 rounded-xl p-6">
+                                    <h4 class="text-xl font-bold mb-4">Development Focus</h4>
+                                    <ul class="space-y-3 text-white/80">
+                                        <li class="flex items-center gap-2">
+                                            <i class="fas fa-shield-alt"></i>
+                                            Stability improvements
+                                        </li>
+                                        <li class="flex items-center gap-2">
+                                            <i class="fas fa-tachometer-alt"></i>
+                                            Performance optimization
+                                        </li>
+                                        <li class="flex items-center gap-2">
+                                            <i class="fas fa-puzzle-piece"></i>
+                                            New feature integration
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-12 space-y-6">
+                        <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                            <a href="https://gemiintelligence.github.io/chat" target="_blank" 
+                               class="button-glow inline-block px-12 py-4 text-xl font-bold tracking-wider rounded-xl">
+                                <i class="fas fa-play-circle mr-2"></i>
+                                TRY GEMI INTELLIGENCE
+                            </a>
+                            <a href="https://github.com/gemiintelligence" target="_blank" 
+                               class="button-glow inline-block px-12 py-4 text-xl font-bold tracking-wider rounded-xl">
+                                <i class="fab fa-github mr-2"></i>
+                                VIEW ON GITHUB
+                            </a>
+                        </div>
+                        <p class="text-white/60">Join us in shaping the future of AI-powered creation</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Navigation scroll effect
+        const nav = document.querySelector('nav');
+        let lastScroll = 0;
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            const scrolled = currentScroll > 50;
+
+            nav.style.transition = 'all 0.3s ease-in-out';
+            nav.style.backdropFilter = scrolled ? 'blur(15px)' : 'blur(5px)';
+            nav.style.borderBottom = scrolled 
+                ? '1px solid rgba(255, 255, 255, 0.2)' 
+                : '1px solid rgba(255, 255, 255, 0.1)';
+            nav.style.transform = currentScroll < lastScroll || currentScroll < 50 
+                ? 'translateY(0)' 
+                : 'translateY(-100%)';
+
+            lastScroll = currentScroll;
+        });
+
+        // Create interactive background
+        document.addEventListener('DOMContentLoaded', () => {
+            const background = document.getElementById('background');
+            const bubbles = [];
+            const maxBubbles = 20;
+            
+            // Create gradient bubbles
+            for (let i = 0; i < maxBubbles; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'interactive-bubble';
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.top = `${Math.random() * 100}%`;
+                bubble.style.transform = `scale(${0.5 + Math.random() * 0.5})`;
+                background.appendChild(bubble);
+                bubbles.push({
+                    element: bubble,
+                    x: parseFloat(bubble.style.left),
+                    y: parseFloat(bubble.style.top),
+                    speed: 0.03 + Math.random() * 0.04,
+                    size: parseFloat(bubble.style.transform.split('(')[1])
+                });
+            }
+
+            // Mouse movement effect
+            let mouseX = 0;
+            let mouseY = 0;
+            let targetX = 0;
+            let targetY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth) - 0.5;
+                mouseY = (e.clientY / window.innerHeight) - 0.5;
+            });
+
+            // Smooth animation
+            function animate() {
+                targetX += (mouseX - targetX) * 0.1;
+                targetY += (mouseY - targetY) * 0.1;
+
+                bubbles.forEach((bubble, index) => {
+                    const movement = (index % 2 === 0 ? 1 : -1) * bubble.speed;
+                    
+                    // Calculate new position with mouse influence
+                    const newX = bubble.x + (targetX * 50 * bubble.size);
+                    const newY = bubble.y + (targetY * 50 * bubble.size);
+
+                    // Apply smooth movement
+                    bubble.element.style.transform = `
+                        translate(${newX}px, ${newY}px) 
+                        scale(${bubble.size})
+                    `;
+                });
+
+                // Update background gradient
+                background.style.background = `
+                    radial-gradient(
+                        circle at ${50 + targetX * 50}% ${50 + targetY * 50}%,
+                        rgba(255, 182, 255, 0.1),
+                        rgba(182, 255, 255, 0.1),
+                        transparent
+                    )
+                `;
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        });
+    </script>
+</body>
+</html> 
